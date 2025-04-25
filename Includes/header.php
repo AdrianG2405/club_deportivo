@@ -23,25 +23,25 @@
                     </li>
                     <!-- Enlace a la página de administradores -->
                     <li class="nav-item">
-                        <a class="nav-link" href="asistencia.php">Asistencia</a>
+                        <a class="nav-link" href="../administrar/asistencia.php">Asistencia</a>
                     </li>
                     <!-- Enlace al logout -->
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">Login</a>
+                        <a class="nav-link" href="../includes/login.php">Login</a>
                     </li>
                     <!-- Aquí deberías agregar más páginas según sea necesario -->
                     <!-- Por ejemplo -->
                     <li class="nav-item">
-                        <a class="nav-link" href="registro_jugador.php">Jugador</a>
+                        <a class="nav-link" href="../administrar/registro_jugador.php">Jugador</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="entrenador.php">Entrenador</a>
+                        <a class="nav-link" href="../administrar/entrenador.php">Entrenador</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="partidos.php">Partidos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pagos.php">Pagos</a>
+                        <a class="nav-link" href="../administrar/pagos.php">Pagos</a>
                     </li>
                     <!-- Otros enlaces adicionales si es necesario -->
                 </ul>

@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club Deportivo</title>
-    <!-- Link a Bootstrap desde CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <!-- Agregar Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Aquí puedes agregar un navbar (barra de navegación) -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!-- Menú de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Club Deportivo</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,19 +17,38 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    <!-- Enlace a la página de inicio -->
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php">Inicio</a>
+                        <a class="nav-link active" href="index.php">Inicio</a>
+                    </li>
+                    <!-- Enlace a la página de administradores -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.php">Administrar</a>
+                    </li>
+                    <!-- Enlace al logout -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">Logout</a>
+                    </li>
+                    <!-- Aquí deberías agregar más páginas según sea necesario -->
+                    <!-- Por ejemplo -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="jugadores.php">Jugadores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/entrenadores.php">Entrenadores</a>
+                        <a class="nav-link" href="entrenadores.php">Entrenadores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/administrar.php">Administrar</a>
+                        <a class="nav-link" href="partidos.php">Partidos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="includes/logout.php">Cerrar sesión</a>
+                        <a class="nav-link" href="pagos.php">Pagos</a>
                     </li>
+                    <!-- Otros enlaces adicionales si es necesario -->
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!-- Contenido de la página -->
+    <div class="container mt-4">
+        <!-- Aquí puedes añadir el contenido específico para cada página -->

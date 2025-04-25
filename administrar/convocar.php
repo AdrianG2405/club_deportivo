@@ -1,14 +1,18 @@
 <?php
 session_start();
+
+// Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../login.php");
+    header("Location: ../include/login.php"); // Ajustado para que sea coherente con la estructura
     exit;
 }
 
-include '../includes/header.php';
-include '../includes/menu.php';
-require '../db.php';
+// Incluir encabezado y menú
+include '../include/header.php';  // Ajustado
+include '../include/menu.php';    // Ajustado
+require '../include/db.php';      // Ajustado
 
+// Obtener el ID del partido desde la URL
 $partidoId = $_GET['partido_id'] ?? null;
 
 if (!$partidoId) {
@@ -16,7 +20,7 @@ if (!$partidoId) {
     exit;
 }
 
-// Obtener datos del partido
+// Obtener los datos del partido
 $stmt = $pdo->prepare("SELECT * FROM partidos WHERE id = ?");
 $stmt->execute([$partidoId]);
 $partido = $stmt->fetch();
@@ -33,15 +37,20 @@ $jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Guardar convocatoria si se envía el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Eliminar las convocatorias anteriores para el mismo partido
     $pdo->prepare("DELETE FROM convocatorias WHERE partido_id = ?")->execute([$partidoId]);
 
     if (!empty($_POST['convocados'])) {
         foreach ($_POST['convocados'] as $jugadorId) {
+            // Marcar como titular si está en la lista de titulares
             $titular = in_array($jugadorId, $_POST['titulares'] ?? []) ? 1 : 0;
+            // Insertar nueva convocatoria
             $stmt = $pdo->prepare("INSERT INTO convocatorias (partido_id, jugador_id, titular) VALUES (?, ?, ?)");
             $stmt->execute([$partidoId, $jugadorId, $titular]);
         }
         echo "<div class='alert alert-success'>Convocatoria actualizada</div>";
+    } else {
+        echo "<div class='alert alert-warning'>No se seleccionaron jugadores.</div>";
     }
 }
 ?>
@@ -50,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <h3>Convocar jugadores para el partido</h3>
     <p><strong><?= $partido['fecha'] ?> | <?= $partido['rival'] ?> (<?= $partido['categoria'] ?>)</strong></p>
 
+    <!-- Formulario para seleccionar jugadores convocados y titulares -->
     <form method="POST">
         <table class="table table-bordered">
             <thead class="table-light">

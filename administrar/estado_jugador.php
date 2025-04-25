@@ -1,13 +1,15 @@
 <?php
 session_start();
+
+// Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../login.php");
+    header("Location: ../include/login.php");
     exit;
 }
 
-include '../includes/header.php';
-include '../includes/menu.php';
-require '../db.php';
+include '../include/header.php';  // Corregido
+include '../include/menu.php';    // Corregido
+require '../include/db.php';      // Corregido
 
 // Crear tabla si no existe
 $pdo->exec("CREATE TABLE IF NOT EXISTS estado_jugador (
@@ -20,11 +22,12 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS estado_jugador (
     FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
 )");
 
-$categoria = "Alevín"; // o dinámica
+// Definir la categoría de jugadores a mostrar
+$categoria = "Alevín"; // Puedes hacerlo dinámico si lo deseas
 $jugadores = $pdo->prepare("SELECT * FROM jugadores WHERE categoria = ?");
 $jugadores->execute([$categoria]);
 
-// Procesar formulario
+// Procesar el formulario para registrar el estado de un jugador
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $jugador_id = $_POST['jugador_id'];
     $tipo = $_POST['tipo'];
@@ -32,9 +35,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inicio = $_POST['fecha_inicio'];
     $fin = $_POST['fecha_fin'];
 
+    // Insertar el estado del jugador en la base de datos
     $stmt = $pdo->prepare("INSERT INTO estado_jugador (jugador_id, tipo, descripcion, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([$jugador_id, $tipo, $descripcion, $inicio, $fin]);
 
+    // Mostrar mensaje de éxito
     echo "<div class='container alert alert-success mt-3'>Estado registrado correctamente</div>";
 }
 ?>
@@ -42,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <div class="container mt-4">
     <h3>Registrar lesión o sanción</h3>
 
+    <!-- Formulario para registrar una lesión o sanción -->
     <form method="POST" class="mb-4" style="max-width: 600px;">
         <div class="mb-3">
             <label>Jugador</label>

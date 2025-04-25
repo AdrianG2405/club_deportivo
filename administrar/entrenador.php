@@ -1,13 +1,16 @@
 <?php
 session_start();
+
+// Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../login.php");
+    header("Location: ../include/login.php");
     exit;
 }
 
-include '../includes/header.php';
-include '../includes/menu.php';
-require '../db.php';
+// Incluir encabezado y menú
+include '../include/header.php';  // Corregido
+include '../include/menu.php';    // Corregido
+require '../include/db.php';      // Corregido
 
 $categoria = "Alevín"; // Esto puedes hacerlo dinámico si quieres
 
@@ -22,6 +25,7 @@ $partidos->execute([$categoria]);
 <div class="container mt-4">
     <h2>Panel del Entrenador</h2>
 
+    <!-- Mostrar próximos entrenamientos -->
     <h4>Próximos Entrenamientos</h4>
     <table class="table table-bordered">
         <thead class="table-dark">
@@ -44,6 +48,7 @@ $partidos->execute([$categoria]);
 
     <hr>
 
+    <!-- Mostrar partidos -->
     <h4>Partidos</h4>
     <table class="table table-bordered">
         <thead class="table-dark">

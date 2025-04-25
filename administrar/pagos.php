@@ -1,15 +1,18 @@
 <?php
 session_start();
+
+// Validar que el usuario esté autenticado y sea un administrador
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-    header("Location: ../login.php");
+    header("Location: ../include/login.php");
     exit;
 }
 
-include '../includes/header.php';
-include '../includes/menu.php';
-require '../db.php';
+// Incluir los archivos necesarios con las rutas correctas
+include '../include/header.php';
+include '../include/menu.php';
+require '../include/db.php';
 
-// Crear tabla si no existe
+// Crear la tabla de pagos si no existe
 $pdo->exec("CREATE TABLE IF NOT EXISTS pagos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     jugador_id INT,
@@ -19,15 +22,17 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS pagos (
     FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
 )");
 
+// Obtener todos los jugadores
 $jugadores = $pdo->query("SELECT * FROM jugadores")->fetchAll();
 
-// Procesar formulario
+// Procesar el formulario de pago
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $jugador_id = $_POST['jugador_id'];
     $concepto = $_POST['concepto'];
     $monto = $_POST['monto'];
     $fecha_pago = $_POST['fecha_pago'];
 
+    // Insertar el pago en la base de datos
     $stmt = $pdo->prepare("INSERT INTO pagos (jugador_id, concepto, monto, fecha_pago) VALUES (?, ?, ?, ?)");
     $stmt->execute([$jugador_id, $concepto, $monto, $fecha_pago]);
 
@@ -38,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <div class="container mt-4">
     <h3>Registrar pago de jugador</h3>
 
+    <!-- Formulario para registrar el pago -->
     <form method="POST" class="mb-5" style="max-width: 600px;">
         <div class="mb-3">
             <label>Jugador</label>
@@ -63,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <button type="submit" class="btn btn-success">Registrar pago</button>
     </form>
 
+    <!-- Historial de pagos -->
     <h4>Historial de pagos</h4>
     <table class="table table-bordered">
         <thead>
@@ -75,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </thead>
         <tbody>
             <?php
+            // Obtener todos los pagos registrados
             $pagos = $pdo->query("SELECT pagos.*, jugadores.nombre FROM pagos JOIN jugadores ON pagos.jugador_id = jugadores.id ORDER BY fecha_pago DESC");
             foreach ($pagos as $p):
             ?>

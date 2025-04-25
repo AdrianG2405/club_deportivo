@@ -1,54 +1,64 @@
 <?php
 session_start();
-require 'db.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $pass = $_POST['password'];
+$error = "";
 
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ?");
-    $stmt->execute([$email]);
-    $usuario = $stmt->fetch();
+// Validación del formulario
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $usuario = $_POST['usuario'];
+    $contrasena = $_POST['contrasena'];
 
-    if ($usuario && $pass === $usuario['password']) {
-        $_SESSION['usuario'] = $usuario;
-
-        // Redirigir según rol
-        switch ($usuario['rol']) {
-            case 'administrador':
-                header("Location: pages/admin.php");
-                break;
-            case 'entrenador':
-                header("Location: pages/entrenador.php");
-                break;
-            case 'padre':
-                header("Location: pages/padre.php");
-                break;
-        }
+    // Usuario y contraseña fijos
+    if ($usuario === 'admin' && $contrasena === 'admin123') {
+        $_SESSION['usuario'] = [
+            'nombre' => 'Administrador',
+            'rol' => 'admin'
+        ];
+        header("Location: ../index.php");
+        exit;
+    } elseif ($usuario === 'entrenador' && $contrasena === 'entrenador123') {
+        $_SESSION['usuario'] = [
+            'nombre' => 'Entrenador',
+            'rol' => 'entrenador'
+        ];
+        header("Location: ../administrar/asistencia.php");
         exit;
     } else {
-        $error = "Credenciales incorrectas";
+        $error = "⚠️ Usuario o contraseña incorrectos";
     }
 }
 ?>
 
-<?php include 'includes/header.php'; ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Club Deportivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="card shadow">
+        <div class="card-body">
+            <h4 class="text-center mb-4">Iniciar Sesión</h4>
 
-<div class="container mt-5">
-    <h2 class="text-center">Iniciar Sesión</h2>
-    <?php if (isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
-    <form method="POST" class="mt-4 mx-auto" style="max-width: 400px;">
-        <div class="mb-3">
-            <label for="email" class="form-label">Correo</label>
-            <input type="email" class="form-control" name="email" required>
+            <?php if (!empty($error)): ?>
+                <div class="alert alert-danger"><?= $error ?></div>
+            <?php endif; ?>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="usuario" class="form-label">Usuario</label>
+                    <input type="text" name="usuario" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="contrasena" class="form-label">Contraseña</label>
+                    <input type="password" name="contrasena" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" name="password" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Entrar</button>
-    </form>
+    </div>
 </div>
-
 </body>
 </html>

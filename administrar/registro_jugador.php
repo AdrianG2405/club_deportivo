@@ -1,30 +1,45 @@
 <?php
 session_start();
+
+// Si el usuario no está autenticado, redirigir al login
 if (!isset($_SESSION['usuario'])) {
-    header("Location: ../login.php");
+    header("Location: ../include/login.php");
     exit;
 }
 
-include '../includes/header.php';
-include '../includes/menu.php';
-require '../db.php';
+// Incluyendo el header y el menú con las rutas correctas
+include '../include/header.php';
+include '../include/menu.php';
 
+// Conexión a la base de datos
+require '../include/db.php';
+
+// Verificar si el usuario es un padre y obtener el ID del padre
 $esPadre = $_SESSION['usuario']['rol'] === 'padre';
 $padreId = $esPadre ? $_SESSION['usuario']['id'] : null;
 
-// Procesar formulario
+// Procesar el formulario si se ha enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = $_POST['nombre'];
+    $nombre = trim($_POST['nombre']);
     $categoria = $_POST['categoria'];
     $padre_id = $esPadre ? $padreId : $_POST['padre_id'];
 
-    $stmt = $pdo->prepare("INSERT INTO jugadores (nombre, categoria, padre_id) VALUES (?, ?, ?)");
-    $stmt->execute([$nombre, $categoria, $padre_id]);
-
-    echo "<div class='container mt-4 alert alert-success'>Jugador registrado correctamente</div>";
+    // Validar los campos
+    if (empty($nombre) || empty($categoria)) {
+        echo "<div class='container mt-4 alert alert-danger'>Por favor, completa todos los campos.</div>";
+    } else {
+        // Preparar la consulta para insertar un nuevo jugador
+        $stmt = $pdo->prepare("INSERT INTO jugadores (nombre, categoria, padre_id) VALUES (?, ?, ?)");
+        if ($stmt->execute([$nombre, $categoria, $padre_id])) {
+            echo "<div class='container mt-4 alert alert-success'>Jugador registrado correctamente</div>";
+        } else {
+            echo "<div class='container mt-4 alert alert-danger'>Hubo un problema al registrar el jugador. Inténtalo de nuevo.</div>";
+        }
+    }
 }
 ?>
 
+<!-- Formulario para registrar un jugador -->
 <div class="container mt-5">
     <h2>Registrar nuevo jugador</h2>
     <form method="POST" class="mt-3" style="max-width: 500px;">

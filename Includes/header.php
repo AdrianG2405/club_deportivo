@@ -1,78 +1,52 @@
-<?php
-// Inicia la sesión si no está iniciada
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Rol del usuario, puede ser 'entrenador', 'padre' o null
-$rol = $_SESSION['usuario']['rol'] ?? null;
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club Deportivo</title>
-    <!-- Bootstrap CSS -->
+    <!-- Agregar Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-<!-- Menú de navegación -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/club_deportivo/index.php">Club Deportivo</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-
-                <!-- Enlace común -->
-                <li class="nav-item">
-                    <a class="nav-link" href="/club_deportivo/index.php">Inicio</a>
-                </li>
-
-                <!-- Menú para entrenadores -->
-                <?php if ($rol === 'entrenador'): ?>
+    <!-- Menú de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Club Deportivo</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <!-- Enlace a la página de inicio -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/club_deportivo/administrar/asistencia.php">Asistencia</a>
+                        <a class="nav-link active" href="index.php">Inicio</a>
                     </li>
+                    <!-- Enlace a la página de entrenadores -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/club_deportivo/administrar/registro_jugador.php">Jugador</a>
+                        <a class="nav-link" href="administrar/entrenadores.php">Entrenadores</a>
                     </li>
+                    <!-- Enlace a la página de padres -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/club_deportivo/administrar/entrenador.php">Entrenador</a>
+                        <a class="nav-link" href="administrar/padres.php">Padres</a>
                     </li>
+                    <!-- Enlace a la página de calendario -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/club_deportivo/administrar/pagos.php">Pagos</a>
+                        <a class="nav-link" href="administrar/calendario.php">Calendario</a>
                     </li>
-                <?php endif; ?>
-
-                <!-- Menú para padres -->
-                <?php if ($rol === 'padre'): ?>
+                    <!-- Enlace a la página de login -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/club_deportivo/partidos.php">Partidos</a>
+                        <a class="nav-link" href="includes/login.php">Login</a>
                     </li>
-                <?php endif; ?>
-
-                <!-- Autenticación -->
-                <?php if (!$rol): ?>
+                    <!-- Enlace a la página de registro de jugadores -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/club_deportivo/includes/login.php">Login</a>
+                        <a class="nav-link" href="administrar/registro_jugadores.php">Registro Jugadores</a>
                     </li>
-                <?php else: ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/club_deportivo/includes/logout.php">Cerrar sesión</a>
-                    </li>
-                <?php endif; ?>
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- Contenedor principal -->
-<div class="container mt-4">
+    <!-- Agregar el script de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

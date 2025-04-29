@@ -23,11 +23,11 @@
                     </li>
                     <!-- Enlace a la página de entrenadores -->
                     <li class="nav-item">
-                        <a class="nav-link" href="administrar/entrenadores.php">Entrenadores</a>
+                        <a class="nav-link" href="administrar/entrenador.php">Entrenadores</a>
                     </li>
                     <!-- Enlace a la página de padres -->
                     <li class="nav-item">
-                        <a class="nav-link" href="administrar/padres.php">Padres</a>
+                        <a class="nav-link" href="administrar/padre.php">Padres</a>
                     </li>
                     <!-- Enlace a la página de calendario -->
                     <li class="nav-item">
@@ -39,7 +39,7 @@
                     </li>
                     <!-- Enlace a la página de registro de jugadores -->
                     <li class="nav-item">
-                        <a class="nav-link" href="administrar/registro_jugadores.php">Registro Jugadores</a>
+                        <a class="nav-link" href="administrar/registro_jugador.php">Registro Jugadores</a>
                     </li>
                 </ul>
             </div>

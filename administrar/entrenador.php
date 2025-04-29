@@ -1,48 +1,82 @@
 <?php
 session_start();
 
-// Si el usuario no está autenticado, redirigir al login
-if (!isset($_SESSION['usuario'])) {
+// Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
+if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
     header("Location: ../includes/login.php");
     exit;
 }
 
-// Verificar si el usuario tiene el rol de 'entrenador'
-if ($_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../includes/login.php");
-    exit;
-}
+include '../include/header.php';  // Incluir el encabezado del sitio
+include '../include/menu.php';    // Incluir el menú de navegación
+require '../include/db.php';      // Conexión a la base de datos
 
-include '../includes/header.php';
-include '../includes/menu.php';
-require '../includes/db.php';
+$entrenadorId = $_SESSION['usuario']['id'];
 
-// Obtener los entrenadores (o lo que necesites, si hay una lista de entrenadores)
-$stmt = $pdo->prepare("SELECT * FROM entrenadores");
-$stmt->execute();
-$entrenadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Obtener los jugadores asignados al entrenador
+$stmt = $pdo->prepare("SELECT * FROM jugadores WHERE entrenador_id = ?");
+$stmt->execute([$entrenadorId]);
+$jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener las convocatorias de partidos de los jugadores del entrenador
+$convocatorias = $pdo->prepare("
+    SELECT p.fecha, p.rival, p.lugar, p.resultado, c.titular, j.nombre AS jugador_nombre
+    FROM convocatorias c
+    JOIN partidos p ON c.partido_id = p.id
+    JOIN jugadores j ON c.jugador_id = j.id
+    WHERE j.entrenador_id = ?
+    ORDER BY p.fecha DESC
+");
+$convocatorias->execute([$entrenadorId]);
+$convocatorias_partidos = $convocatorias->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <div class="container mt-4">
-    <h2>Panel de Entrenadores</h2>
+    <h2>Panel del Entrenador</h2>
 
-    <?php if (empty($entrenadores)): ?>
-        <div class="alert alert-warning">No hay entrenadores registrados.</div>
+    <!-- Mostrar jugadores asignados al entrenador -->
+    <h3>Mis Jugadores</h3>
+    <?php if (empty($jugadores)): ?>
+        <div class="alert alert-warning">No tienes jugadores asignados.</div>
+    <?php else: ?>
+        <ul class="list-group">
+            <?php foreach ($jugadores as $jugador): ?>
+                <li class="list-group-item">
+                    <strong><?= $jugador['nombre'] ?> (<?= $jugador['categoria'] ?>)</strong>
+                    <br>Padre: <?= $jugador['padre_id'] ?> <!-- Mostrar el ID del padre -->
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <hr>
+
+    <!-- Mostrar las convocatorias de partidos -->
+    <h3>Convocatorias de Partidos</h3>
+    <?php if (empty($convocatorias_partidos)): ?>
+        <div class="alert alert-warning">No hay convocatorias de partidos para tus jugadores.</div>
     <?php else: ?>
         <table class="table">
-            <thead class="table-light">
+            <thead class="thead-dark">
                 <tr>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Acciones</th>
+                    <th>Fecha</th>
+                    <th>Rival</th>
+                    <th>Lugar</th>
+                    <th>Titular</th>
+                    <th>Resultado</th>
+                    <th>Jugador</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($entrenadores as $entrenador): ?>
+                <?php foreach ($convocatorias_partidos as $convocatoria): ?>
                     <tr>
-                        <td><?= $entrenador['nombre'] ?></td>
-                        <td><?= $entrenador['categoria'] ?></td>
-                        <td><a href="editar_entrenador.php?id=<?= $entrenador['id'] ?>" class="btn btn-info">Editar</a></td>
+                        <td><?= $convocatoria['fecha'] ?></td>
+                        <td><?= $convocatoria['rival'] ?></td>
+                        <td><?= $convocatoria['lugar'] ?></td>
+                        <td><?= $convocatoria['titular'] ? 'Sí' : 'No' ?></td>
+                        <td><?= $convocatoria['resultado'] ?? '—' ?></td>
+                        <td><?= $convocatoria['jugador_nombre'] ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

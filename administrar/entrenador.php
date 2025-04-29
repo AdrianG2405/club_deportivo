@@ -1,77 +1,52 @@
 <?php
-session_start();
+// Incluir archivo de configuración de base de datos
+require_once '../includes/db.php';
 
-// Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../include/login.php");
-    exit;
-}
-
-// Incluir encabezado y menú
-include '../include/header.php';  // Corregido
-include '../include/menu.php';    // Corregido
-require '../include/db.php';      // Corregido
-
-$categoria = "Alevín"; // Esto puedes hacerlo dinámico si quieres
-
-// Obtener entrenamientos y partidos de la categoría del entrenador
-$entrenamientos = $pdo->prepare("SELECT * FROM entrenamientos WHERE categoria = ? ORDER BY fecha DESC");
-$entrenamientos->execute([$categoria]);
-
-$partidos = $pdo->prepare("SELECT * FROM partidos WHERE categoria = ? ORDER BY fecha DESC");
-$partidos->execute([$categoria]);
+// Obtener todos los entrenadores desde la base de datos
+$query = $pdo->prepare("SELECT * FROM entrenadores ORDER BY nombre ASC");
+$query->execute();
+$entrenadores = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<div class="container mt-4">
-    <h2>Panel del Entrenador</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenadores - Club Deportivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Incluir el menú de navegación -->
+    <?php include('../includes/header.php'); ?> <!-- Cambié la ruta para que se incluya correctamente -->
 
-    <!-- Mostrar próximos entrenamientos -->
-    <h4>Próximos Entrenamientos</h4>
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Categoría</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($entrenamientos as $ent): ?>
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+        <h2>Lista de Entrenadores</h2>
+        <table class="table table-bordered">
+            <thead class="table-dark">
                 <tr>
-                    <td><?= $ent['fecha'] ?></td>
-                    <td><?= $ent['hora'] ?></td>
-                    <td><?= $ent['categoria'] ?></td>
+                    <th>Nombre</th>
+                    <th>Especialidad</th>
+                    <th>Acción</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($entrenadores as $entrenador): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($entrenador['nombre']) ?></td>
+                        <td><?= htmlspecialchars($entrenador['especialidad']) ?></td>
+                        <td>
+                            <a href="editar_entrenador.php?id=<?= $entrenador['id'] ?>" class="btn btn-warning">Editar</a>
+                            <a href="eliminar_entrenador.php?id=<?= $entrenador['id'] ?>" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
-    <hr>
-
-    <!-- Mostrar partidos -->
-    <h4>Partidos</h4>
-    <table class="table table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Fecha</th>
-                <th>Rival</th>
-                <th>Lugar</th>
-                <th>Resultado</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($partidos as $part): ?>
-                <tr>
-                    <td><?= $part['fecha'] ?></td>
-                    <td><?= $part['rival'] ?></td>
-                    <td><?= $part['lugar'] ?></td>
-                    <td><?= $part['resultado'] ?? '—' ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-
-</div>
-
+    <!-- Agregar el script de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

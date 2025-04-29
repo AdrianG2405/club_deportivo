@@ -3,16 +3,16 @@ session_start();
 
 // Si el usuario no está autenticado, redirigir al login
 if (!isset($_SESSION['usuario'])) {
-    header("Location: ../include/login.php");
+    header("Location: ../includes/login.php");
     exit;
 }
 
 // Incluyendo el header y el menú con las rutas correctas
-include '../include/header.php';
-include '../include/menu.php';
+include '../includes/header.php';
+include '../includes/menu.php';
 
 // Conexión a la base de datos
-require '../include/db.php';
+require '../includes/db.php';
 
 // Verificar si el usuario es un padre y obtener el ID del padre
 $esPadre = $_SESSION['usuario']['rol'] === 'padre';
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $padre_id = $esPadre ? $padreId : $_POST['padre_id'];
 
     // Validar los campos
-    if (empty($nombre) || empty($categoria)) {
+    if (empty($nombre) || empty($categoria) || (!$esPadre && empty($padre_id))) {
         echo "<div class='container mt-4 alert alert-danger'>Por favor, completa todos los campos.</div>";
     } else {
         // Preparar la consulta para insertar un nuevo jugador
@@ -71,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="btn btn-primary">Registrar jugador</button>
     </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

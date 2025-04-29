@@ -3,13 +3,13 @@ session_start();
 
 // Verificar si el usuario está autenticado y tiene el rol de 'padre'
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'padre') {
-    header("Location: ../include/login.php");
+    header("Location: ../includes/login.php");  // Corregido la ruta al login
     exit;
 }
 
-include '../include/header.php';  // Corregido
-include '../include/menu.php';    // Corregido
-require '../include/db.php';      // Corregido
+include '../includes/header.php';  // Corregido la ruta
+include '../includes/menu.php';    // Corregido la ruta
+require '../includes/db.php';      // Corregido la ruta
 
 $padreId = $_SESSION['usuario']['id'];
 
@@ -33,7 +33,7 @@ $hijos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Tarjeta con detalles del hijo -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <strong><?= $hijo['nombre'] ?> (<?= $hijo['categoria'] ?>)</strong>
+                    <strong><?= htmlspecialchars($hijo['nombre']) ?> (<?= htmlspecialchars($hijo['categoria']) ?>)</strong>
                 </div>
                 <div class="card-body">
                     <h5>Convocatorias de partidos</h5>
@@ -61,9 +61,9 @@ $hijos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($convocatorias as $convocatoria):
                         ?>
                             <tr>
-                                <td><?= $convocatoria['fecha'] ?></td>
-                                <td><?= $convocatoria['rival'] ?></td>
-                                <td><?= $convocatoria['lugar'] ?></td>
+                                <td><?= htmlspecialchars($convocatoria['fecha']) ?></td>
+                                <td><?= htmlspecialchars($convocatoria['rival']) ?></td>
+                                <td><?= htmlspecialchars($convocatoria['lugar']) ?></td>
                                 <td><?= $convocatoria['titular'] ? 'Sí' : 'No' ?></td>
                                 <td><?= $convocatoria['resultado'] ?? '—' ?></td>
                             </tr>
@@ -77,6 +77,9 @@ $hijos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
+
+<!-- Agregar el script de Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

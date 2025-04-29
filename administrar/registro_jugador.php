@@ -7,14 +7,11 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-// Incluyendo el header y el menú con las rutas correctas
 include '../includes/header.php';
 include '../includes/menu.php';
-
-// Conexión a la base de datos
 require '../includes/db.php';
 
-// Verificar si el usuario es un padre y obtener el ID del padre
+// Verificar si el usuario tiene el rol de 'padre'
 $esPadre = $_SESSION['usuario']['rol'] === 'padre';
 $padreId = $esPadre ? $_SESSION['usuario']['id'] : null;
 
@@ -25,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $padre_id = $esPadre ? $padreId : $_POST['padre_id'];
 
     // Validar los campos
-    if (empty($nombre) || empty($categoria) || (!$esPadre && empty($padre_id))) {
+    if (empty($nombre) || empty($categoria)) {
         echo "<div class='container mt-4 alert alert-danger'>Por favor, completa todos los campos.</div>";
     } else {
         // Preparar la consulta para insertar un nuevo jugador
@@ -39,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!-- Formulario para registrar un jugador -->
 <div class="container mt-5">
     <h2>Registrar nuevo jugador</h2>
     <form method="POST" class="mt-3" style="max-width: 500px;">
@@ -71,8 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="btn btn-primary">Registrar jugador</button>
     </form>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

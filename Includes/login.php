@@ -1,14 +1,14 @@
 <?php
 session_start();
-require '../includes/db.php'; // Conexión a la base de datos
+require '../includes/db.php'; // Asegúrate de que esta ruta sea correcta
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['usuario']; // El campo sigue llamándose usuario en el formulario
+    $usuario = $_POST['usuario'];
     $contrasena = $_POST['contrasena'];
 
-    // Validar si el usuario existe usando 'username' que es el nombre en la base de datos
+    // Validar si el usuario existe
     $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = ?");
-    $stmt->execute([$username]);
+    $stmt->execute([$usuario]);
     $usuario = $stmt->fetch();
 
     if ($usuario && password_verify($contrasena, $usuario['password'])) {
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['usuario'] = [
             'id' => $usuario['id'],
             'usuario' => $usuario['username'],
-            'rol' => $usuario['rol']
+            'rol' => $usuario['rol'] // Guardamos el rol
         ];
 
         // Redirigir al panel correspondiente según el rol
@@ -42,18 +42,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert2 para notificaciones -->
+    <script>
+        // Función para validar el formulario de login
+        function validarFormulario() {
+            var usuario = document.getElementById('usuario').value;
+            var contrasena = document.getElementById('contrasena').value;
+
+            if (usuario === "" || contrasena === "") {
+                // Mostrar alerta de error si los campos están vacíos
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Oops!',
+                    text: 'Por favor, ingresa tanto el usuario como la contraseña.'
+                });
+                return false;
+            }
+
+            // Si todo está bien, se envía el formulario
+            return true;
+        }
+    </script>
 </head>
 <body>
     <div class="container mt-5">
         <h2>Iniciar sesión</h2>
-        <form method="POST">
+        <form method="POST" onsubmit="return validarFormulario()">
             <div class="mb-3">
                 <label for="usuario" class="form-label">Usuario</label>
-                <input type="text" name="usuario" class="form-control" required>
+                <input type="text" name="usuario" id="usuario" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="contrasena" class="form-label">Contraseña</label>
-                <input type="password" name="contrasena" class="form-control" required>
+                <input type="password" name="contrasena" id="contrasena" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-primary">Iniciar sesión</button>
         </form>
@@ -62,5 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="registro.php" class="btn btn-secondary">¿No tienes cuenta? Regístrate</a>
         </div>
     </div>
+
 </body>
 </html>
+<?php include '../includes/footer.php'; ?>

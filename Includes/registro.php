@@ -2,22 +2,20 @@
 session_start();
 require '../includes/db.php'; // Conexión a la base de datos
 
-// Procesar el formulario si se ha enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = trim($_POST['usuario']);
+    $username = trim($_POST['usuario']); // el input sigue llamándose 'usuario'
     $contrasena = $_POST['contrasena'];
-    $rol = $_POST['rol'];  // Aquí se asigna el rol, padre o entrenador
+    $rol = $_POST['rol'];
 
-    // Validar los campos
-    if (empty($usuario) || empty($contrasena) || empty($rol)) {
+    if (empty($username) || empty($contrasena) || empty($rol)) {
         echo "<div class='container mt-4 alert alert-danger'>Por favor, completa todos los campos.</div>";
     } else {
         // Hashear la contraseña
         $contrasenaHash = password_hash($contrasena, PASSWORD_BCRYPT);
 
-        // Preparar la consulta para insertar el nuevo usuario
-        $stmt = $pdo->prepare("INSERT INTO usuarios (usuario, contrasena, rol) VALUES (?, ?, ?)");
-        if ($stmt->execute([$usuario, $contrasenaHash, $rol])) {
+        // Insertar en base de datos usando la columna 'username'
+        $stmt = $pdo->prepare("INSERT INTO usuarios (username, contrasena, rol) VALUES (?, ?, ?)");
+        if ($stmt->execute([$username, $contrasenaHash, $rol])) {
             echo "<div class='container mt-4 alert alert-success'>Cuenta creada exitosamente. Ahora puedes iniciar sesión.</div>";
             header("Location: login.php");
             exit;
@@ -65,3 +63,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
+<?php include '../includes/footer.php'; ?>

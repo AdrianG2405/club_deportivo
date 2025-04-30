@@ -2,41 +2,48 @@
 session_start();
 
 // Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../includes/login.php");
+if (!isset($_SESSION['usuario'])) {
+    header("Location: ../includes/login.php");  // Si no está logueado, redirigir al login
     exit;
 }
 
+// Verificar si el usuario es un "padre"
+if ($_SESSION['usuario']['rol'] === 'padre') {
+    // Si es un "padre", redirigir a la página de error
+    header("Location: error.php");
+    exit;
+}
+
+// Si es un "entrenador", continuar con la ejecución de la página
 include '../includes/header.php';  // Incluir el encabezado del sitio
+require '../includes/db.php';      // Asegúrate de que esta ruta sea correcta
 
-require 'C:/xampp/htdocs/club_deportivo/include/db.php';
-     // Conexión a la base de datos
-
+// Obtener el id del entrenador (usado en consultas)
 $entrenadorId = $_SESSION['usuario']['id'];
 
-// Obtener los jugadores asignados al entrenador
-$stmt = $pdo->prepare("SELECT * FROM jugadores WHERE entrenador_id = ?");
-$stmt->execute([$entrenadorId]);
+// Obtener todos los jugadores
+$stmt = $pdo->query("SELECT * FROM jugadores WHERE entrenador_id = $entrenadorId");
 $jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener las convocatorias de partidos de los jugadores del entrenador
-$convocatorias = $pdo->prepare("
+// Obtener las convocatorias de partidos
+$convocatorias = $pdo->query("
     SELECT p.fecha, p.rival, p.lugar, p.resultado, c.titular, j.nombre AS jugador_nombre
     FROM convocatorias c
     JOIN partidos p ON c.partido_id = p.id
     JOIN jugadores j ON c.jugador_id = j.id
-    WHERE j.entrenador_id = ?
+    WHERE j.entrenador_id = $entrenadorId
     ORDER BY p.fecha DESC
 ");
-$convocatorias->execute([$entrenadorId]);
 $convocatorias_partidos = $convocatorias->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <div class="container mt-4">
     <h2>Panel del Entrenador</h2>
 
-    <!-- Mostrar jugadores asignados al entrenador -->
+    <!-- Botón para asignar jugadores -->
+    <a href="asignar_jugadores.php" class="btn btn-success mb-3">Asignar Jugadores</a>
+
+    <!-- Mostrar jugadores -->
     <h3>Mis Jugadores</h3>
     <?php if (empty($jugadores)): ?>
         <div class="alert alert-warning">No tienes jugadores asignados.</div>
@@ -45,7 +52,7 @@ $convocatorias_partidos = $convocatorias->fetchAll(PDO::FETCH_ASSOC);
             <?php foreach ($jugadores as $jugador): ?>
                 <li class="list-group-item">
                     <strong><?= $jugador['nombre'] ?> (<?= $jugador['categoria'] ?>)</strong>
-                    <br>Padre: <?= $jugador['padre_id'] ?> <!-- Mostrar el ID del padre -->
+                    <br>Padre: <?= $jugador['padre_id'] ?>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -53,10 +60,10 @@ $convocatorias_partidos = $convocatorias->fetchAll(PDO::FETCH_ASSOC);
 
     <hr>
 
-    <!-- Mostrar las convocatorias de partidos -->
+    <!-- Mostrar las convocatorias -->
     <h3>Convocatorias de Partidos</h3>
     <?php if (empty($convocatorias_partidos)): ?>
-        <div class="alert alert-warning">No hay convocatorias de partidos para tus jugadores.</div>
+        <div class="alert alert-warning">No hay convocatorias registradas.</div>
     <?php else: ?>
         <table class="table">
             <thead class="thead-dark">
@@ -87,3 +94,4 @@ $convocatorias_partidos = $convocatorias->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 </html>
+<?php include '../includes/footer.php'; ?>

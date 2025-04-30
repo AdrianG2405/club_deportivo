@@ -3,13 +3,13 @@ session_start();
 
 // Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../include/login.php");
+    header("Location: ../includes/login.php");
     exit;
 }
 
-include '../include/header.php';  // Corregido
-include '../include/menu.php';    // Corregido
-require '../include/db.php';      // Corregido
+include '../includes/header.php';  // Corregido
+
+require '../includes/db.php';      // Corregido
 
 // Crear tabla si no existe
 $pdo->exec("CREATE TABLE IF NOT EXISTS estado_jugador (

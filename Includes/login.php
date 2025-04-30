@@ -1,22 +1,22 @@
 <?php
 session_start();
-require '../include/db.php'; // Conexión a la base de datos
+require '../includes/db.php'; // Conexión a la base de datos
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = $_POST['usuario'];
+    $username = $_POST['usuario']; // El campo sigue llamándose usuario en el formulario
     $contrasena = $_POST['contrasena'];
 
-    // Validar si el usuario existe
-    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE usuario = ?");
-    $stmt->execute([$usuario]);
+    // Validar si el usuario existe usando 'username' que es el nombre en la base de datos
+    $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = ?");
+    $stmt->execute([$username]);
     $usuario = $stmt->fetch();
 
-    if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
+    if ($usuario && password_verify($contrasena, $usuario['password'])) {
         // Guardar el usuario en la sesión
         $_SESSION['usuario'] = [
             'id' => $usuario['id'],
-            'usuario' => $usuario['usuario'],
-            'rol' => $usuario['rol'] // Guardamos el rol
+            'usuario' => $usuario['username'],
+            'rol' => $usuario['rol']
         ];
 
         // Redirigir al panel correspondiente según el rol

@@ -7,9 +7,10 @@ if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador'
     exit;
 }
 
-include '../include/header.php';  // Incluir el encabezado del sitio
-include '../include/menu.php';    // Incluir el menú de navegación
-require '../include/db.php';      // Conexión a la base de datos
+include '../includes/header.php';  // Incluir el encabezado del sitio
+
+require 'C:/xampp/htdocs/club_deportivo/include/db.php';
+     // Conexión a la base de datos
 
 $entrenadorId = $_SESSION['usuario']['id'];
 

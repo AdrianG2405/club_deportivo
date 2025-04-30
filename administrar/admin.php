@@ -1,11 +1,11 @@
 <?php
 // Protección de acceso
-require_once '../include/auth.php';
+require_once '../includes/auth.php';
 
 // Conexiones y encabezados
-include '../include/header.php';
-include '../include/menu.php';
-require '../include/db.php';
+include '../includes/header.php';
+
+require '../includs/db.php';
 
 // Obtener usuarios registrados
 $stmt = $pdo->query("SELECT * FROM usuarios");

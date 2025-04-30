@@ -3,14 +3,14 @@ session_start();
 
 // Validar que el usuario esté autenticado y sea un administrador
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-    header("Location: ../include/login.php");
+    header("Location: ../includes/login.php");
     exit;
 }
 
 // Incluir los archivos necesarios con las rutas correctas
-include '../include/header.php';
-include '../include/menu.php';
-require '../include/db.php';
+include '../includes/header.php';
+
+require '../includes/db.php';
 
 // Crear la tabla de pagos si no existe
 $pdo->exec("CREATE TABLE IF NOT EXISTS pagos (

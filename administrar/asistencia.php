@@ -1,13 +1,13 @@
 <?php
 session_start();
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../include/login.php");
+    header("Location: ../includes/login.php");
     exit;
 }
 
-include '../include/header.php';
-include '../include/menu.php';
-require '../include/db.php';
+include '../includes/header.php';
+
+require '../includes/db.php';
 
 $categoria = 'Alevín'; // Podés hacerlo dinámico más adelante
 $fechaHoy = date('Y-m-d');

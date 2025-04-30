@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../include/db.php'; // Conexión a la base de datos
+require '../includes/db.php'; // Conexión a la base de datos
 
 // Procesar el formulario si se ha enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

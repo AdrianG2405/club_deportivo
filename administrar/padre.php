@@ -7,9 +7,9 @@ if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'padre') {
     exit;
 }
 
-include '../include/header.php';  // Corregido
-include '../include/menu.php';    // Corregido
-require '../include/db.php';      // Corregido
+include '../includes/header.php';  // Corregido
+
+require '../includes/db.php';      // Corregido
 
 $padreId = $_SESSION['usuario']['id'];
 

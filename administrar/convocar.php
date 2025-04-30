@@ -3,14 +3,14 @@ session_start();
 
 // Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../include/login.php"); // Ajustado para que sea coherente con la estructura
+    header("Location: ../includes/login.php"); // Ajustado para que sea coherente con la estructura
     exit;
 }
 
 // Incluir encabezado y menú
-include '../include/header.php';  // Ajustado
-include '../include/menu.php';    // Ajustado
-require '../include/db.php';      // Ajustado
+include '../includes/header.php';  // Ajustado
+    // Ajustado
+require '../includes/db.php';      // Ajustado
 
 // Obtener el ID del partido desde la URL
 $partidoId = $_GET['partido_id'] ?? null;

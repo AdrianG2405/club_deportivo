@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../include/db.php'; // Conexión a la base de datos
+require '../includes/db.php'; // Conexión a la base de datos
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['usuario'])) {

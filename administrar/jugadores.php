@@ -5,7 +5,7 @@ include '../includes/header.php';
 // Obtener todos los jugadores y sus equipos
 $stmt = $pdo->query("SELECT jugadores.*, equipos.nombre AS equipo_nombre
                      FROM jugadores
-                     LEFT JOIN equipos ON jugadores.equipo_id = equipos.id");
+                     LEFT JOIN equipos ON jugadores.equipo = equipo");
 
 $jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -20,7 +20,8 @@ $jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <thead class="table-dark">
                 <tr>
                     <th>Nombre</th>
-                    <th>Categoría</th>
+                    <th>Apellido</th>
+                    <th>Categoria</th>
                     <th>Equipo</th>
                 </tr>
             </thead>
@@ -28,8 +29,9 @@ $jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($jugadores as $jugador): ?>
                     <tr>
                         <td><?= htmlspecialchars($jugador['nombre']) ?></td>
+                        <td><?= htmlspecialchars($jugador['apellido']) ?></td>
                         <td><?= htmlspecialchars($jugador['categoria']) ?></td>
-                        <td><?= htmlspecialchars($jugador['equipo_nombre'] ?? 'Sin equipo') ?></td>
+                        <td><?= htmlspecialchars($jugador['equipo']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

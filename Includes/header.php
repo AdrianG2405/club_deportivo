@@ -34,9 +34,6 @@
           <a class="nav-link" href="/club_deportivo/administrar/asignar_jugadores.php">Asignar Jugador</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/club_deportivo/administrar/asistencia.php">Asistencia</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/club_deportivo/administrar/estado_jugador.php">Estado Jugador</a>
         </li>
         <li class="nav-item">
@@ -52,7 +49,10 @@
           <a class="nav-link" href="/club_deportivo/includes/login.php">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/club_deportivo/administrar/convocar.php">Convocatorias</a>
+          <a class="nav-link" href="/club_deportivo/administrar/gestionar_convocatoria.php">Convocatoria Entrenador</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/club_deportivo/administrar/convocar.php">Convocatoria Jugador</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/club_deportivo/administrar/calendario.php">Calendario</a>

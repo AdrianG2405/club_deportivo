@@ -1,100 +1,77 @@
 <?php
-session_start();
-
-// Validar que el usuario esté autenticado y sea un administrador
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-    header("Location: ../includes/login.php");
-    exit;
-}
-
-// Incluir los archivos necesarios con las rutas correctas
+require '../includes/db.php';
 include '../includes/header.php';
 
-require '../includes/db.php';
+$jugador = null;
+$pagos = [];
+$mensaje = null;
 
-// Crear la tabla de pagos si no existe
-$pdo->exec("CREATE TABLE IF NOT EXISTS pagos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    jugador_id INT,
-    concepto VARCHAR(100),
-    monto DECIMAL(10,2),
-    fecha_pago DATE,
-    FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
-)");
-
-// Obtener todos los jugadores
-$jugadores = $pdo->query("SELECT * FROM jugadores")->fetchAll();
-
-// Procesar el formulario de pago
+// Procesar formulario de búsqueda
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $jugador_id = $_POST['jugador_id'];
-    $concepto = $_POST['concepto'];
-    $monto = $_POST['monto'];
-    $fecha_pago = $_POST['fecha_pago'];
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
 
-    // Insertar el pago en la base de datos
-    $stmt = $pdo->prepare("INSERT INTO pagos (jugador_id, concepto, monto, fecha_pago) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$jugador_id, $concepto, $monto, $fecha_pago]);
+    // Buscar al jugador
+    $stmt = $pdo->prepare("SELECT * FROM jugadores WHERE nombre = ? AND apellido = ?");
+    $stmt->execute([$nombre, $apellido]);
+    $jugador = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    echo "<div class='container alert alert-success mt-3'>Pago registrado correctamente</div>";
+    if ($jugador) {
+        // Obtener pagos del jugador
+        $pagosStmt = $pdo->prepare("SELECT * FROM pagos WHERE jugador_id = ? ORDER BY fecha_pago DESC");
+        $pagosStmt->execute([$jugador['id']]);
+        $pagos = $pagosStmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        $mensaje = "No se encontró un jugador con ese nombre y apellido.";
+    }
 }
 ?>
 
 <div class="container mt-4">
-    <h3>Registrar pago de jugador</h3>
+    <h2>Consulta de Pagos del Jugador</h2>
 
-    <!-- Formulario para registrar el pago -->
-    <form method="POST" class="mb-5" style="max-width: 600px;">
+    <form method="POST" class="mb-4" style="max-width: 600px;">
         <div class="mb-3">
-            <label>Jugador</label>
-            <select name="jugador_id" class="form-select" required>
-                <option value="">Selecciona un jugador</option>
-                <?php foreach ($jugadores as $j): ?>
-                    <option value="<?= $j['id'] ?>"><?= $j['nombre'] ?></option>
-                <?php endforeach; ?>
-            </select>
+            <label for="nombre">Nombre del jugador</label>
+            <input type="text" name="nombre" id="nombre" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label>Concepto</label>
-            <input type="text" name="concepto" class="form-control" placeholder="Ej: Cuota abril, Matrícula" required>
+            <label for="apellido">Apellido del jugador</label>
+            <input type="text" name="apellido" id="apellido" class="form-control" required>
         </div>
-        <div class="mb-3">
-            <label>Monto</label>
-            <input type="number" name="monto" step="0.01" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Fecha de pago</label>
-            <input type="date" name="fecha_pago" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success">Registrar pago</button>
+        <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
 
-    <!-- Historial de pagos -->
-    <h4>Historial de pagos</h4>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Jugador</th>
-                <th>Concepto</th>
-                <th>Monto</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // Obtener todos los pagos registrados
-            $pagos = $pdo->query("SELECT pagos.*, jugadores.nombre FROM pagos JOIN jugadores ON pagos.jugador_id = jugadores.id ORDER BY fecha_pago DESC");
-            foreach ($pagos as $p):
-            ?>
-                <tr>
-                    <td><?= $p['nombre'] ?></td>
-                    <td><?= $p['concepto'] ?></td>
-                    <td><?= number_format($p['monto'], 2) ?> €</td>
-                    <td><?= $p['fecha_pago'] ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+    <?php if ($mensaje): ?>
+        <div class="alert alert-danger"><?= $mensaje ?></div>
+    <?php endif; ?>
+
+    <?php if ($jugador): ?>
+        <h4>Pagos de <?= htmlspecialchars($jugador['nombre']) ?> <?= htmlspecialchars($jugador['apellido']) ?></h4>
+
+        <?php if (empty($pagos)): ?>
+            <div class="alert alert-warning">No hay pagos registrados para este jugador.</div>
+        <?php else: ?>
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Fecha de Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($pagos as $p): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($p['concepto']) ?></td>
+                            <td><?= number_format($p['monto'], 2) ?> €</td>
+                            <td><?= htmlspecialchars($p['fecha_pago']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    <?php endif; ?>
 </div>
 
 </body>

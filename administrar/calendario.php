@@ -20,7 +20,7 @@ $partidos->execute();
 </head>
 <body>
     <!-- Menú de navegación -->
-    <?php include('header.php'); ?>  <!-- Este incluye el menú desde el archivo header.php -->
+    <?php include '../includes/header.php'; ?>  <!-- Incluye el menú desde el archivo header.php -->
 
     <!-- Contenido principal -->
     <div class="container mt-4">
@@ -38,9 +38,9 @@ $partidos->execute();
             <tbody>
                 <?php foreach ($entrenamientos as $ent): ?>
                     <tr>
-                        <td><?= $ent['fecha'] ?></td>
-                        <td><?= $ent['hora'] ?></td>
-                        <td><?= $ent['categoria'] ?></td>
+                        <td><?= htmlspecialchars($ent['fecha']) ?></td>
+                        <td><?= htmlspecialchars($ent['hora']) ?></td>
+                        <td><?= htmlspecialchars($ent['categoria']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -59,17 +59,19 @@ $partidos->execute();
             <tbody>
                 <?php foreach ($partidos as $part): ?>
                     <tr>
-                        <td><?= $part['fecha'] ?></td>
-                        <td><?= $part['rival'] ?></td>
-                        <td><?= $part['lugar'] ?></td>
-                        <td><?= $part['resultado'] ?? '—' ?></td>
+                        <td><?= htmlspecialchars($part['fecha']) ?></td>
+                        <td><?= htmlspecialchars($part['rival']) ?></td>
+                        <td><?= htmlspecialchars($part['lugar']) ?></td>
+                        <td><?= htmlspecialchars($part['resultado'] ?? '—') ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 
+    <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 <?php include '../includes/footer.php'; ?>

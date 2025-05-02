@@ -1,74 +1,80 @@
 <?php
-session_start();
-require '../includes/db.php'; // Conexión a la base de datos
+require '../includes/db.php';
+include '../includes/header.php';
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['usuario'])) {
-    header("Location: ../includes/login.php");
-    exit;
-}
+$mensaje = "";
 
-// Si el usuario no tiene rol de 'padre', no debe poder acceder a esta página
-if ($_SESSION['usuario']['rol'] !== 'padre') {
-    header("Location: ../index.php");
-    exit;
-}
-
-$padreId = $_SESSION['usuario']['id'];
-
-// Procesar el formulario si se ha enviado
+// Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre']);
+    $apellidos = trim($_POST['apellidos']);
+    $dni = trim($_POST['dni']);
     $categoria = $_POST['categoria'];
+    $telefono_padre = trim($_POST['telefono_padre']);
+    $email_padre = trim($_POST['email_padre']);
+    $cuenta = trim($_POST['cuenta']);
 
-    // Validar campos
-    if (empty($nombre) || empty($categoria)) {
-        echo "<div class='alert alert-danger'>Por favor, completa todos los campos.</div>";
+    // Validación básica
+    if (empty($nombre) || empty($apellidos) || empty($dni) || empty($categoria) || empty($telefono_padre) || empty($email_padre) || empty($cuenta)) {
+        $mensaje = "<div class='alert alert-danger'>Por favor, completa todos los campos.</div>";
     } else {
-        // Insertar el nuevo jugador en la base de datos
-        $stmt = $pdo->prepare("INSERT INTO jugadores (nombre, categoria, padre_id) VALUES (?, ?, ?)");
-        if ($stmt->execute([$nombre, $categoria, $padreId])) {
-            echo "<div class='alert alert-success'>Jugador registrado correctamente.</div>";
+        // Insertar en la base de datos
+        $stmt = $pdo->prepare("INSERT INTO jugadores (nombre, apellido, dni, categoria, telefono_padre, email_padre, cuenta_bancaria) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $exito = $stmt->execute([$nombre, $apellidos, $dni, $categoria, $telefono_padre, $email_padre, $cuenta]);
+
+        if ($exito) {
+            $mensaje = "<div class='alert alert-success'>Jugador registrado correctamente.</div>";
         } else {
-            echo "<div class='alert alert-danger'>Hubo un error al registrar al jugador. Intenta de nuevo.</div>";
+            $mensaje = "<div class='alert alert-danger'>Hubo un error al registrar al jugador.</div>";
         }
     }
 }
 ?>
 
-<!-- Formulario de registro de jugador -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Jugador</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-5">
-        <h2>Registrar nuevo jugador</h2>
-        <form method="POST">
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre del jugador</label>
-                <input type="text" name="nombre" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="categoria" class="form-label">Categoría</label>
-                <select name="categoria" class="form-select" required>
-                    <option value="">Selecciona</option>
-                    <option value="Prebenjamín">Prebenjamín</option>
-                    <option value="Benjamín">Benjamín</option>
-                    <option value="Alevín">Alevín</option>
-                    <option value="Infantil">Infantil</option>
-                    <option value="Cadete">Cadete</option>
-                    <option value="Juvenil">Juvenil</option>
-                </select>
-            </div>
+<div class="container mt-5">
+    <h2>Registro de Jugador</h2>
+    <?= $mensaje ?>
 
-            <button type="submit" class="btn btn-primary">Registrar jugador</button>
-        </form>
-    </div>
+    <form method="POST">
+        <div class="mb-3">
+            <label>Nombre del jugador</label>
+            <input type="text" name="nombre" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Apellidos del jugador</label>
+            <input type="text" name="apellidos" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>DNI del jugador</label>
+            <input type="text" name="dni" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Categoría</label>
+            <select name="categoria" class="form-select" required>
+                <option value="">Selecciona</option>
+                <option value="Prebenjamín">Prebenjamín</option>
+                <option value="Benjamín">Benjamín</option>
+                <option value="Alevín">Alevín</option>
+                <option value="Infantil">Infantil</option>
+                <option value="Cadete">Cadete</option>
+                <option value="Juvenil">Juvenil</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Teléfono del padre</label>
+            <input type="tel" name="telefono_padre" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Email del padre</label>
+            <input type="email" name="email_padre" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Número de cuenta (IBAN)</label>
+            <input type="text" name="cuenta" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar jugador</button>
+    </form>
+</div>
 
 </body>
 </html>

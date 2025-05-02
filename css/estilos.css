@@ -26,3 +26,105 @@ body {
     background-color: #198754;
     color: white;
 }
+section {
+    background: #fff;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+h2 {
+    color: #2c3e50;
+}
+body {
+    margin-bottom: 80px; /* o lo suficiente para no tapar contenido */
+  }
+  
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000000;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 9999;
+     
+    
+  }
+/* Banner alargado, sin margen, y con altura más baja */
+#bannerCarousel {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%; /* Usar el 100% del ancho de la pantalla */
+    overflow: hidden;
+    height: 400px; /* Puedes ajustar la altura aquí */
+}
+
+/* Asegurarse de que las imágenes del banner se ajusten correctamente */
+.carousel-inner {
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-item {
+    height: 100%;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%; /* Ajusta la imagen a todo el contenedor */
+    object-fit: cover; /* Mantiene la relación de aspecto, recortando si es necesario */
+}
+
+/* Para asegurarnos de que no haya márgenes en el contenedor del banner */
+.carousel {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Para hacer que el contenedor del banner ocupe toda la pantalla */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Asegura que no haya desplazamiento horizontal */
+}
+
+/* Control de las flechas del carousel */
+.carousel-control-prev-icon, 
+.carousel-control-next-icon {
+    background-color: black; /* Cambio del color de las flechas */
+}
+
+/* Asegurarse de que el banner y el contenido principal estén correctamente alineados */
+.container {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+/* Asegurarse de que las tarjetas estén alineadas verticalmente */
+.card {
+    margin-bottom: 20px; /* Espacio entre las tarjetas */
+}
+
+.card-img-top {
+    height: 200px; /* Establecer una altura fija para las imágenes de las tarjetas */
+    object-fit: cover;
+}
+
+/* Estilizar el botón debajo de las categorías */
+.btn-primary {
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Para los márgenes de las categorías y el botón */
+.container {
+    margin-left: 90px;
+    margin-right: 15px;
+}
+
+

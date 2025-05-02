@@ -3,20 +3,20 @@ session_start();
 
 // Asegurarse de que solo entrenadores accedan
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../includes/login.php");
+    header("Location: ../includes/login.php");  // Redirige a la página de login si no está logueado o no es entrenador
     exit;
 }
 
 require '../includes/db.php';
 include '../includes/header.php';
 
-$entrenadorId = $_SESSION['usuario']['id'];
+$entrenadorId = $_SESSION['usuario']['id'];  // Obtiene el ID del entrenador logueado
 
 // Procesar asignación si se envió el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['jugador_id'])) {
     $jugadorId = $_POST['jugador_id'];
 
-    // Asignar entrenador al jugador
+    // Asignar entrenador al jugador en la base de datos
     $stmt = $pdo->prepare("UPDATE jugadores SET entrenador_id = ? WHERE id = ?");
     $stmt->execute([$entrenadorId, $jugadorId]);
 
@@ -51,6 +51,8 @@ $jugadores_disponibles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <a href="entrenador.php" class="btn btn-secondary">Volver al panel</a>
 </div>
+
 </body>
 </html>
+
 <?php include '../includes/footer.php'; ?>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../includes/db.php'; // Ajusta si está en otra ruta
-include '../includes/header.php';
+include '../includes/header.php'; // Incluir el encabezado
 
 // Obtener todos los equipos
 $stmt = $pdo->query("SELECT * FROM equipos");

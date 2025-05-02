@@ -1,11 +1,14 @@
 <?php
-// Protección de acceso
+// Protección de acceso solo para entrenadores
 require_once '../includes/auth.php';
+if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
+    header('Location: /club_deportivo/index.php');
+    exit;
+}
 
 // Conexiones y encabezados
 include '../includes/header.php';
-
-require '../includs/db.php';
+require '../includes/db.php';
 
 // Obtener usuarios registrados
 $stmt = $pdo->query("SELECT * FROM usuarios");
@@ -38,10 +41,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <p class="text-muted">Gestión de usuarios y actividades</p>
 
     <?php if (!empty($mensaje)): ?>
-        <div class="alert alert-success"><?= $mensaje ?></div>
+        <div class="alert alert-success"><?= htmlspecialchars($mensaje) ?></div>
     <?php endif; ?>
 
-    <a href="registro_jugadores.php" class="btn btn-secondary mb-3">Registrar nuevo jugador</a>
+    <a href="registro_jugador.php" class="btn btn-secondary mb-3">Registrar nuevo jugador</a>
 
     <h4>Usuarios Registrados</h4>
     <table class="table table-bordered">
@@ -90,5 +93,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </form>
 </div>
 
-</body>
-</html>
+<?php include '../includes/footer.php'; ?>

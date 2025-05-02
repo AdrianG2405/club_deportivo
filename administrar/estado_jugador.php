@@ -1,12 +1,5 @@
 <?php
 session_start();
-
-// Verificar si el usuario está autenticado y tiene el rol de 'entrenador'
-if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
-    header("Location: ../includes/login.php");
-    exit;
-}
-
 include '../includes/header.php';  // Corregido
 
 require '../includes/db.php';      // Corregido
@@ -54,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <select name="jugador_id" class="form-select" required>
                 <option value="">Selecciona un jugador</option>
                 <?php foreach ($jugadores as $j): ?>
-                    <option value="<?= $j['id'] ?>"><?= $j['nombre'] ?></option>
+                    <option value="<?= $j['id'] ?>"><?= htmlspecialchars($j['nombre']) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>

@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $contrasenaHash = password_hash($contrasena, PASSWORD_BCRYPT);
 
         // Insertar en base de datos usando la columna 'username'
-        $stmt = $pdo->prepare("INSERT INTO usuarios (username, contrasena, rol) VALUES (?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO usuarios (username, password, rol) VALUES (?, ?, ?)");
         if ($stmt->execute([$username, $contrasenaHash, $rol])) {
             echo "<div class='container mt-4 alert alert-success'>Cuenta creada exitosamente. Ahora puedes iniciar sesión.</div>";
             header("Location: login.php");

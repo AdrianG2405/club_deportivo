@@ -51,6 +51,7 @@ $partidos->execute();
             <thead class="table-dark">
                 <tr>
                     <th>Fecha</th>
+                    <th>Equipo Local</th>
                     <th>Rival</th>
                     <th>Lugar</th>
                     <th>Resultado</th>
@@ -60,6 +61,7 @@ $partidos->execute();
                 <?php foreach ($partidos as $part): ?>
                     <tr>
                         <td><?= htmlspecialchars($part['fecha']) ?></td>
+                        <td><?= htmlspecialchars($part['equipo_local']) ?></td>
                         <td><?= htmlspecialchars($part['rival']) ?></td>
                         <td><?= htmlspecialchars($part['lugar']) ?></td>
                         <td><?= htmlspecialchars($part['resultado'] ?? '—') ?></td>

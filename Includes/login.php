@@ -4,7 +4,7 @@ require '../includes/db.php'; // Asegúrate de que esta ruta sea correcta
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
-    $contrasena = $_POST['contrasena'];
+    $contrasena = $_POST['password'];
 
     // Validar si el usuario existe
     $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE username = ?");
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Función para validar el formulario de login
         function validarFormulario() {
             var usuario = document.getElementById('usuario').value;
-            var contrasena = document.getElementById('contrasena').value;
+            var contrasena = document.getElementById('password').value;
 
             if (usuario === "" || contrasena === "") {
                 // Mostrar alerta de error si los campos están vacíos
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="mb-3">
                 <label for="contrasena" class="form-label">Contraseña</label>
-                <input type="password" name="contrasena" id="contrasena" class="form-control" required>
+                <input type="password" name="password" id="password" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-primary">Iniciar sesión</button>
         </form>

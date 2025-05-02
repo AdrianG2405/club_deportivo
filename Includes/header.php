@@ -49,10 +49,10 @@
           <a class="nav-link" href="/club_deportivo/includes/login.php">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/club_deportivo/administrar/gestionar_convocatoria.php">Convocatoria Entrenador</a>
+          <a class="nav-link" href="/club_deportivo/administrar/convocatoria_entrenador.php">Convocatoria Entrenador</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/club_deportivo/administrar/convocar.php">Convocatoria Jugador</a>
+          <a class="nav-link" href="/club_deportivo/administrar/convocatoria_jugador.php">Convocatoria Jugador</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/club_deportivo/administrar/calendario.php">Calendario</a>

@@ -1,20 +1,19 @@
 <?php
-// Protección de acceso solo para entrenadores
+
 require_once '../includes/auth.php';
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
     header('Location: /club_deportivo/index.php');
     exit;
 }
 
-// Conexiones y encabezados
 include '../includes/header.php';
 require '../includes/db.php';
 
-// Obtener usuarios registrados
+
 $stmt = $pdo->query("SELECT * FROM usuarios");
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Procesamiento del formulario de actividad
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $fecha = $_POST['fecha'];
     $hora = $_POST['hora'];

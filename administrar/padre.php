@@ -1,11 +1,11 @@
 <?php
-require '../includes/db.php';  // Conexión a la base de datos
-include '../includes/header.php';  // Incluir encabezado
+require '../includes/db.php';  
+include '../includes/header.php';  
 
-// Variable para almacenar el jugador encontrado
+
 $jugadorEncontrado = null;
 
-// Verificar si se ha enviado el formulario con el nombre y apellido del hijo
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nombre = $_POST['nombre'];
     $apellido = $_POST['apellido'];
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->execute([$nombre, $apellido]);
     $jugadorEncontrado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Si el jugador existe, mostrar las estadísticas
+    //  mostrar las estadísticas
     if ($jugadorEncontrado) {
         $jugadorId = $jugadorEncontrado['id'];
 
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <div class="container mt-4">
     <h2>Consulta de Estadísticas del Jugador</h2>
 
-    <!-- Formulario para que el padre ingrese el nombre y apellido de su hijo -->
+    
     <form method="POST" class="mb-4" style="max-width: 600px;">
         <div class="mb-3">
             <label for="nombre">Nombre del hijo</label>
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="alert alert-danger"><?= $mensajeError ?></div>
     <?php endif; ?>
 
-    <!-- Si se encontró al jugador, mostrar las estadísticas -->
+    <!-- Si se encontró al jugadomostrar las estadísticas -->
     <?php if ($jugadorEncontrado): ?>
         <div class="card mb-4">
             <div class="card-header">

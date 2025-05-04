@@ -3,11 +3,10 @@ session_start();
 require '../includes/db.php';
 include '../includes/header.php';
 
-// Obtener todos los equipos
 $stmt = $pdo->query("SELECT * FROM equipos");
 $equipos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Comprobar si se ha seleccionado un equipo para mostrar el plantel
+
 $equipoSeleccionado = $_GET['equipo'] ?? '';
 $jugadores = [];
 

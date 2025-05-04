@@ -2,7 +2,7 @@
 require '../includes/db.php';
 include '../includes/header.php';
 
-// Inicializar variables
+
 $mensaje = '';
 $categorias = $pdo->query("SELECT DISTINCT categoria FROM jugadores")->fetchAll(PDO::FETCH_COLUMN);
 $jugadores = [];
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Si se selecciona una categoría, cargar sus jugadores
+
 if (!empty($_POST['categoria'])) {
     $stmt = $pdo->prepare("SELECT id, nombre, apellido FROM jugadores WHERE categoria = ? ORDER BY nombre, apellido");
     $stmt->execute([$_POST['categoria']]);

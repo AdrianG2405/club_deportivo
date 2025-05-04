@@ -1,26 +1,26 @@
 <?php
 session_start();
 
-// Verificar si el usuario está autenticado
+// Verificar si el usuario es coorecto
 if (!isset($_SESSION['usuario'])) {
     header("Location: ../includes/login.php");  // Redirigir al login si no está logueado
     exit;
 }
 
-// Verificar si el usuario tiene el rol de "entrenador"
+// Verificar si el usuario tiene el rol de entrenador
 if ($_SESSION['usuario']['rol'] !== 'entrenador') {
     header("Location: ../includes/error.php");  // Redirigir a página de error si no es entrenador
     exit;
 }
 
-// Incluir encabezado y menú
+
 include '../includes/header.php';  
 require '../includes/db.php'; 
 
-// Obtener el id del entrenador
+
 $entrenadorId = $_SESSION['usuario']['id'];
 
-// Obtener todos los jugadores asignados al entrenador
+
 $stmt = $pdo->prepare("SELECT * FROM jugadores WHERE entrenador_id = ?");
 $stmt->execute([$entrenadorId]);
 $jugadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -41,10 +41,10 @@ $convocatorias_partidos = $convocatorias->fetchAll(PDO::FETCH_ASSOC);
 <div class="container mt-4">
     <h2>Panel del Entrenador</h2>
 
-    <!-- Botón para asignar jugadores -->
+    
     <a href="asignar_jugadores.php" class="btn btn-success mb-3">Asignar Jugadores</a>
 
-    <!-- Mostrar los jugadores del entrenador -->
+ 
     <h3>Mis Jugadores</h3>
     <?php if (empty($jugadores)): ?>
         <div class="alert alert-warning">No tienes jugadores asignados.</div>
@@ -61,7 +61,6 @@ $convocatorias_partidos = $convocatorias->fetchAll(PDO::FETCH_ASSOC);
 
     <hr>
 
-    <!-- Mostrar las convocatorias de partidos -->
     <h3>Convocatorias de Partidos</h3>
     <?php if (empty($convocatorias_partidos)): ?>
         <div class="alert alert-warning">No hay convocatorias registradas.</div>

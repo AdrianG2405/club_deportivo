@@ -1,10 +1,10 @@
 <?php
 session_start();
-include '../includes/header.php';  // Corregido
+include '../includes/header.php';  
 
-require '../includes/db.php';      // Corregido
+require '../includes/db.php';     
 
-// Crear tabla si no existe
+
 $pdo->exec("CREATE TABLE IF NOT EXISTS estado_jugador (
     id INT AUTO_INCREMENT PRIMARY KEY,
     jugador_id INT,
@@ -15,12 +15,12 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS estado_jugador (
     FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
 )");
 
-// Definir la categoría de jugadores a mostrar
-$categoria = "Alevín"; // Puedes hacerlo dinámico si lo deseas
+
+$categoria = "Alevín";
 $jugadores = $pdo->prepare("SELECT * FROM jugadores WHERE categoria = ?");
 $jugadores->execute([$categoria]);
 
-// Procesar el formulario para registrar el estado de un jugador
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $jugador_id = $_POST['jugador_id'];
     $tipo = $_POST['tipo'];
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt = $pdo->prepare("INSERT INTO estado_jugador (jugador_id, tipo, descripcion, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([$jugador_id, $tipo, $descripcion, $inicio, $fin]);
 
-    // Mostrar mensaje de éxito
+    
     echo "<div class='container alert alert-success mt-3'>Estado registrado correctamente</div>";
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../includes/db.php'; // Asegúrate de que esta ruta sea correcta
+require '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['usuario'] = [
             'id' => $usuario['id'],
             'usuario' => $usuario['username'],
-            'rol' => $usuario['rol'] // Guardamos el rol
+            'rol' => $usuario['rol']
         ];
 
         // Redirigir al panel correspondiente según el rol
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert2 para notificaciones -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
     <script>
         // Función para validar el formulario de login
         function validarFormulario() {
@@ -58,8 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
                 return false;
             }
-
-            // Si todo está bien, se envía el formulario
             return true;
         }
     </script>

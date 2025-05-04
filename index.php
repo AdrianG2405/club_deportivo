@@ -1,6 +1,7 @@
 <?php include 'includes/header.php'; ?>
+   
+    <!-- Banner -->
 
-<!-- Banner FUERA del container para ocupar todo el ancho -->
 <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
@@ -11,7 +12,8 @@
     </div>
   </div>
 
-  <!-- Flechas para cambiar manualmente -->
+    
+    <!-- Felcha-->
   <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
     <span class="carousel-control-prev-icon"></span>
     <span class="visually-hidden">Anterior</span>
@@ -22,7 +24,7 @@
   </button>
 </div>
 
-<!-- Contenido principal -->
+
 <div class="container mt-5">
     <h1 class="text-center">Bienvenida a la mejor Escuela de Fútbol</h1>
     <p class="text-center">¡Únete a nosotros y diviértete!</p>
@@ -31,7 +33,7 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Conviértete en un verdadero profesional</h2>
     
-    <!-- Sección de Categorías -->
+    <!-- Categorías -->
     <div class="row">
         <div class="col-md-4 mb-4">
             <div class="card h-100">
@@ -64,7 +66,7 @@
         </div>
     </div>
 
-    <!-- Botón centrado debajo de las tarjetas -->
+    <!-- Botón -->
     <div class="text-center mt-4 mb-5">
         <a href="#unete" class="btn btn-lg btn-primary">¡ÚNETE A NOSOTROS!</a>
     </div>

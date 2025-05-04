@@ -1,21 +1,21 @@
 <?php
-// Conectar con la base de datos
+
 require_once '../includes/db.php';
 
-// Mensaje de éxito
+
 $mensaje = '';
 
 // Procesar el formulario para crear un partido
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
+
+    // Obtenerlos datos del formulario
     $equipo_local = $_POST['equipo_local'];
     $rival = $_POST['rival'];
     $fecha = $_POST['fecha'];
     $lugar = $_POST['lugar'];
 
-    // Validar los campos
+    
     if (!empty($equipo_local) && !empty($rival) && !empty($fecha) && !empty($lugar)) {
-        // Insertar el nuevo partido en la base de datos
         $stmt = $pdo->prepare("INSERT INTO partidos (equipo_local, rival, fecha, lugar) VALUES (?, ?, ?, ?)");
         $stmt->execute([$equipo_local, $rival, $fecha, $lugar]);
 
@@ -39,14 +39,14 @@ $partidos->execute();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Menú de navegación -->
-    <?php include '../includes/header.php'; ?>  <!-- Incluye el menú desde el archivo header.php -->
+    
+    <?php include '../includes/header.php'; ?>  
 
-    <!-- Contenido principal -->
+
     <div class="container mt-4">
         <h2>Crear un Nuevo Partido</h2>
 
-        <!-- Mostrar mensaje de éxito o error -->
+     
         <?php if ($mensaje): ?>
             <div class="alert alert-info"><?= $mensaje ?></div>
         <?php endif; ?>
@@ -96,7 +96,6 @@ $partidos->execute();
         </table>
     </div>
 
-    <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

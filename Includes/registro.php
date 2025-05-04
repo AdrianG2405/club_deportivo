@@ -1,10 +1,9 @@
 <?php
 session_start();
-require '../includes/db.php'; // Conexión a la base de datos
+require '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['usuario']); // el input sigue llamándose 'usuario'
-    $contrasena = $_POST['contrasena'];
+    $username = trim($_POST['usuario']); 
     $rol = $_POST['rol'];
 
     if (empty($username) || empty($contrasena) || empty($rol)) {

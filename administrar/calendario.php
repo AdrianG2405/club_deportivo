@@ -1,11 +1,10 @@
 <?php
-// Conectar con la base de datos
+
 require_once '../includes/db.php';
 
 // Obtener los entrenamientos y partidos programados
 $entrenamientos = $pdo->prepare("SELECT * FROM entrenamientos ORDER BY fecha DESC");
 $entrenamientos->execute();
-
 $partidos = $pdo->prepare("SELECT * FROM partidos ORDER BY fecha DESC");
 $partidos->execute();
 ?>
@@ -19,10 +18,10 @@ $partidos->execute();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Menú de navegación -->
-    <?php include '../includes/header.php'; ?>  <!-- Incluye el menú desde el archivo header.php -->
+    
+    <?php include '../includes/header.php'; ?>  
 
-    <!-- Contenido principal -->
+    
     <div class="container mt-4">
         <h2>Calendario de Entrenamientos y Partidos</h2>
 
@@ -71,7 +70,7 @@ $partidos->execute();
         </table>
     </div>
 
-    <!-- Scripts de Bootstrap -->
+   
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

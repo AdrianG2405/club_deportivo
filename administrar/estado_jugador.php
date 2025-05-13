@@ -1,81 +1,124 @@
 <?php
 session_start();
-include '../includes/header.php';  
 
-require '../includes/db.php';     
+// Verificar si el usuario ha iniciado sesión y tiene el rol de entrenador
+if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
+    header("Location: ../includes/login.php");
+    exit;
+}
 
+require '../includes/db.php';
+include '../includes/header.php';
 
-$pdo->exec("CREATE TABLE IF NOT EXISTS estado_jugador (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    jugador_id INT,
-    tipo ENUM('lesión', 'sanción'),
-    descripcion TEXT,
-    fecha_inicio DATE,
-    fecha_fin DATE,
-    FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
-)");
-
-
-$categoria = "Alevín";
-$jugadores = $pdo->prepare("SELECT * FROM jugadores WHERE categoria = ?");
-$jugadores->execute([$categoria]);
-
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $jugador_id = $_POST['jugador_id'];
+// Procesar el formulario si se envió
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['jugador_id'])) {
+    $jugadorId = $_POST['jugador_id'];
     $tipo = $_POST['tipo'];
     $descripcion = $_POST['descripcion'];
-    $inicio = $_POST['fecha_inicio'];
-    $fin = $_POST['fecha_fin'];
+    $fecha_inicio = $_POST['fecha_inicio'];
+    $fecha_fin = $_POST['fecha_fin'];
 
     // Insertar el estado del jugador en la base de datos
     $stmt = $pdo->prepare("INSERT INTO estado_jugador (jugador_id, tipo, descripcion, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$jugador_id, $tipo, $descripcion, $inicio, $fin]);
+    $stmt->execute([$jugadorId, $tipo, $descripcion, $fecha_inicio, $fecha_fin]);
 
-    
-    echo "<div class='container alert alert-success mt-3'>Estado registrado correctamente</div>";
+    echo "<div class='container mt-4 alert alert-success'>Estado registrado correctamente.</div>";
+}
+
+// Obtener la lista de equipos disponibles
+$equipos_stmt = $pdo->query("SELECT DISTINCT equipo FROM jugadores WHERE equipo IS NOT NULL ORDER BY equipo");
+$equipos = $equipos_stmt->fetchAll(PDO::FETCH_COLUMN);
+
+// Obtener todos los jugadores y organizarlos por equipo
+$jugadores_stmt = $pdo->query("SELECT id, nombre, apellido, equipo FROM jugadores WHERE equipo IS NOT NULL");
+$jugadores_por_equipo = [];
+while ($row = $jugadores_stmt->fetch(PDO::FETCH_ASSOC)) {
+    $jugadores_por_equipo[$row['equipo']][] = [
+        'id' => $row['id'],
+        'nombre' => $row['nombre'],
+        'apellido' => $row['apellido']
+    ];
 }
 ?>
 
-<div class="container mt-4">
-    <h3>Registrar lesión o sanción</h3>
+<div class="container mt-5">
+    <h2>Registrar Estado del Jugador</h2>
 
-    <!-- Formulario para registrar una lesión o sanción -->
-    <form method="POST" class="mb-4" style="max-width: 600px;">
+    <form method="POST" class="mb-3">
         <div class="mb-3">
-            <label>Jugador</label>
-            <select name="jugador_id" class="form-select" required>
-                <option value="">Selecciona un jugador</option>
-                <?php foreach ($jugadores as $j): ?>
-                    <option value="<?= $j['id'] ?>"><?= htmlspecialchars($j['nombre']) ?></option>
+            <label for="equipo" class="form-label">Selecciona un equipo:</label>
+            <select id="equipo" name="equipo" class="form-select" required>
+                <option value="">-- Selecciona un equipo --</option>
+                <?php foreach ($equipos as $equipo): ?>
+                    <option value="<?= htmlspecialchars($equipo) ?>"><?= htmlspecialchars($equipo) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
+
         <div class="mb-3">
-            <label>Tipo</label>
+            <label for="jugador_id" class="form-label">Selecciona un jugador:</label>
+            <select id="jugador_id" name="jugador_id" class="form-select" required>
+                <option value="">-- Selecciona un jugador --</option>
+                <!-- Las opciones se cargarán dinámicamente mediante JavaScript -->
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo de Estado:</label>
             <select name="tipo" class="form-select" required>
                 <option value="lesión">Lesión</option>
                 <option value="sanción">Sanción</option>
             </select>
         </div>
+
         <div class="mb-3">
-            <label>Descripción</label>
+            <label for="descripcion" class="form-label">Descripción:</label>
             <textarea name="descripcion" class="form-control" required></textarea>
         </div>
-        <div class="row">
-            <div class="col">
-                <label>Fecha inicio</label>
-                <input type="date" name="fecha_inicio" class="form-control" required>
-            </div>
-            <div class="col">
-                <label>Fecha fin</label>
-                <input type="date" name="fecha_fin" class="form-control" required>
-            </div>
+
+        <div class="mb-3">
+            <label for="fecha_inicio" class="form-label">Fecha de Inicio:</label>
+            <input type="date" name="fecha_inicio" class="form-control" required>
         </div>
-        <button class="btn btn-primary mt-3" type="submit">Registrar estado</button>
+
+        <div class="mb-3">
+            <label for="fecha_fin" class="form-label">Fecha de Fin:</label>
+            <input type="date" name="fecha_fin" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registrar Estado</button>
     </form>
+
+    <a href="entrenador.php" class="btn btn-secondary">Volver al panel</a>
 </div>
+
+<script>
+// Datos de jugadores por equipo generados desde PHP
+const jugadoresPorEquipo = <?php echo json_encode($jugadores_por_equipo); ?>;
+
+document.addEventListener('DOMContentLoaded', function () {
+    const equipoSelect = document.getElementById('equipo');
+    const jugadorSelect = document.getElementById('jugador_id');
+
+    equipoSelect.addEventListener('change', function () {
+        const equipoSeleccionado = this.value;
+
+        // Limpiar las opciones actuales
+        jugadorSelect.innerHTML = '<option value="">-- Selecciona un jugador --</option>';
+
+        if (equipoSeleccionado && jugadoresPorEquipo[equipoSeleccionado]) {
+            jugadoresPorEquipo[equipoSeleccionado].forEach(jugador => {
+                const option = document.createElement('option');
+                option.value = jugador.id;
+                option.textContent = jugador.nombre + ' ' + jugador.apellido;
+                jugadorSelect.appendChild(option);
+            });
+        }
+    });
+});
+</script>
 
 </body>
 </html>
+
 <?php include '../includes/footer.php'; ?>

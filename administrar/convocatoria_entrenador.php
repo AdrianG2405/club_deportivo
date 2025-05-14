@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+// entrar en usuario de entrenador
+if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
+    header("Location: ../includes/login.php");
+    exit;
+}
 require '../includes/db.php';
 include '../includes/header.php';
 

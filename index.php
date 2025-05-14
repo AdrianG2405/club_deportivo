@@ -41,6 +41,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Jugadores</h5>
                     <p class="card-text">Revisa tus estadísticas</p>
+                    <a href="administrar/jugadores.php" class="stretched-link"></a>
+
                 </div>
             </div>
         </div>
@@ -51,6 +53,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Padres</h5>
                     <p class="card-text">Registra a tu hijo en solo un clic</p>
+                    <a href="administrar/registro_jugador.php" class="stretched-link"></a>
                 </div>
             </div>
         </div>
@@ -61,6 +64,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Entrenadores</h5>
                     <p class="card-text">Gestiona tu equipo</p>
+                    <a href="administrar/entrenador.php" class="stretched-link"></a>
                 </div>
             </div>
         </div>
@@ -68,7 +72,7 @@
 
     <!-- Botón -->
     <div class="text-center mt-4 mb-5">
-        <a href="#unete" class="btn btn-lg btn-primary">¡ÚNETE A NOSOTROS!</a>
+        <a href="administrar/registro_jugador.php" class="btn btn-lg btn-primary">¡ÚNETE A NOSOTROS!</a>
     </div>
 </div>
 

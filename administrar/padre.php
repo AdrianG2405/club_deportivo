@@ -1,4 +1,4 @@
-<?php
+<?php 
 require '../includes/db.php';
 include '../includes/header.php';
 
@@ -116,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['jugador_id'])) {
                     <p><strong>Rival:</strong> <?= htmlspecialchars($proximoPartido['rival']) ?></p>
                     <p><strong>Lugar:</strong> <?= htmlspecialchars($proximoPartido['lugar']) ?></p>
                 <?php else: ?>
-                    <p>No hay próximos partidos programados.</p>
+                    <p>No hay próximos partidos programados para este jugador.</p>
                 <?php endif; ?>
 
                 <h5 class="mt-4">Estadísticas</h5>
@@ -176,7 +176,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
+</div>
+<div style="height: 100px;"></div>
 </body>
 </html>
 <?php include '../includes/footer.php'; ?>

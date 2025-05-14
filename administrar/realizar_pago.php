@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $cantidad = $_POST['cantidad'] ?? null;
     $cuenta = $_POST['cuenta'] ?? null;
 
-    // Validaciones básicas
+ 
     if ($jugador_id && $cantidad > 0 && !empty($cuenta)) {
         // Registrar el pago simulado
         $stmt = $pdo->prepare("INSERT INTO pagos (jugador_id, monto, concepto, fecha_pago) VALUES (?, ?, ?, NOW())");

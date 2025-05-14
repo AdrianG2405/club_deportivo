@@ -2,11 +2,11 @@
 require '../includes/db.php';
 include '../includes/header.php';
 
-// Obtener la lista de equipos disponibles
+// Obtener la lista de equipos
 $equipos_stmt = $pdo->query("SELECT DISTINCT equipo FROM jugadores WHERE equipo IS NOT NULL ORDER BY equipo");
 $equipos = $equipos_stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Obtener todos los jugadores y sus estados, organizados por equipo
+// Obtener todos los jugadores y sus estados
 $jugadores_stmt = $pdo->query("
     SELECT j.id, j.nombre, j.apellido, j.equipo, ej.tipo, ej.descripcion, ej.fecha_inicio, ej.fecha_fin
     FROM jugadores j
@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['jugador_id'])) {
     $stmt->execute([$jugadorId]);
     $jugadorSeleccionado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Obtener el próximo partido del jugador
+    // Obtener el próximo partido 
     $proximo_partido_stmt = $pdo->prepare("
         SELECT p.fecha, p.rival, p.lugar
         FROM convocatorias c

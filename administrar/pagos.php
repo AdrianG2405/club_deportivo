@@ -6,7 +6,7 @@ $jugador = null;
 $pagos = [];
 $mensaje = null;
 
-// Procesar formulario de búsqueda
+// formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['nombre'], $_POST['apellido'])) {
     $nombre = $_POST['nombre'];
     $apellido = $_POST['apellido'];
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['nombre'], $_POST['ape
 
         // Obtener total pagado y deuda restante
         $pagado = array_sum(array_column($pagos, 'monto'));
-        $cuotaTotal = 300.00; // Puedes ajustar este valor
+        $cuotaTotal = 600.00; 
         $restante = $cuotaTotal - $pagado;
     } else {
         $mensaje = "No se encontró un jugador con ese nombre y apellido.";
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['nombre'], $_POST['ape
     <?php if ($jugador): ?>
         <h4>Pagos de <?= htmlspecialchars($jugador['nombre']) ?> <?= htmlspecialchars($jugador['apellido']) ?></h4>
 
-        <p><strong>Total de la cuota:</strong> 300.00 €</p>
+        <p><strong>Total de la cuota:</strong> 600.00 €</p>
         <p><strong>Total pagado:</strong> <?= number_format($pagado, 2) ?> €</p>
         <p><strong>Restante:</strong> <?= number_format($restante, 2) ?> €</p>
 
@@ -97,8 +97,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['nombre'], $_POST['ape
             </form>
         </div>
     <?php endif; ?>
-
-    <!-- Espacio adicional para evitar superposición con el footer -->
     <div style="height: 100px;"></div>
 </main>
 

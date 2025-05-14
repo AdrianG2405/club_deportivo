@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Verificar si el usuario ha iniciado sesión y tiene el rol de entrenador
+// entrar en usuario de entrenador
 if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador') {
     header("Location: ../includes/login.php");
     exit;
@@ -10,7 +10,7 @@ if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'entrenador'
 require '../includes/db.php';
 include '../includes/header.php';
 
-// Procesar el formulario si se envió
+// formulario a base 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['jugador_id'])) {
     $jugadorId = $_POST['jugador_id'];
     $tipo = $_POST['tipo'];
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['jugador_id'])) {
 $equipos_stmt = $pdo->query("SELECT DISTINCT equipo FROM jugadores WHERE equipo IS NOT NULL ORDER BY equipo");
 $equipos = $equipos_stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Obtener todos los jugadores y organizarlos por equipo
+// Obtener todos los jugadores
 $jugadores_stmt = $pdo->query("SELECT id, nombre, apellido, equipo FROM jugadores WHERE equipo IS NOT NULL");
 $jugadores_por_equipo = [];
 while ($row = $jugadores_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -59,7 +59,6 @@ while ($row = $jugadores_stmt->fetch(PDO::FETCH_ASSOC)) {
             <label for="jugador_id" class="form-label">Selecciona un jugador:</label>
             <select id="jugador_id" name="jugador_id" class="form-select" required>
                 <option value="">-- Selecciona un jugador --</option>
-                <!-- Las opciones se cargarán dinámicamente mediante JavaScript -->
             </select>
         </div>
 
@@ -93,7 +92,7 @@ while ($row = $jugadores_stmt->fetch(PDO::FETCH_ASSOC)) {
 </div>
 
 <script>
-// Datos de jugadores por equipo generados desde PHP
+// Datos de jugadores por equipo
 const jugadoresPorEquipo = <?php echo json_encode($jugadores_por_equipo); ?>;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -103,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
     equipoSelect.addEventListener('change', function () {
         const equipoSeleccionado = this.value;
 
-        // Limpiar las opciones actuales
+        // Limpieza de datod
         jugadorSelect.innerHTML = '<option value="">-- Selecciona un jugador --</option>';
 
         if (equipoSeleccionado && jugadoresPorEquipo[equipoSeleccionado]) {
